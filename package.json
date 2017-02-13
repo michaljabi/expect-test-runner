@@ -2,7 +2,7 @@
   "name": "expect-test-runner",
   "version": "0.0.1",
   "scripts": {
-    "start": "babel src --out-dir build && node ./dist/index.js"
+    "start": "babel src --out-dir build && node ./build/index.js"
   },
   "keywords": [],
   "author": "michaljabi",
