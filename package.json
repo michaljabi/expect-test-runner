@@ -1,0 +1,17 @@
+{
+  "name": "expect-test-runner",
+  "version": "0.0.1",
+  "scripts": {
+    "start": "babel src --out-dir build && node ./dist/index.js"
+  },
+  "keywords": [],
+  "author": "michaljabi",
+  "license": "MIT",
+  "dependencies": {},
+  "devDependencies": {
+    "babel-cli": "^6.22.2",
+    "babel-preset-es2015": "^6.22.0",
+    "chalk": "^1.1.3",
+    "expect": "^1.20.2"
+  }
+}
