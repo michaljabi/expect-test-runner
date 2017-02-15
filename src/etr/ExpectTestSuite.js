@@ -2,12 +2,13 @@ import chalk from 'chalk';
 
 export default class ExpectTestSuite {
 
-  constructor ( name ) {
-    this.name = name;
+  constructor ( suiteDescription ) {
+    this.name = suiteDescription;
     this.ch = {
       error: chalk.bold.red,
       pass: chalk.bgGreen.black,
       fail: chalk.bgRed.black,
+      skip: chalk.bgBlue.black,
       intro: chalk.green,
       completed: chalk.green,
     };
@@ -24,8 +25,21 @@ export default class ExpectTestSuite {
     return `Run TC [${no}]: ${blue( description )}`;
   }
 
-  it ( name, testCase ) {
-    this.testCases.push( { name, testCase } );
+  should ( name, testCase, skip = false  ) {
+    return this.it( `should ${name}`, testCase, skip );
+  }
+
+  xshould ( name, testCase ) {
+    return this.should( name, testCase, true );
+  }
+
+  it ( name, testCase, skip = false ) {
+    this.testCases.push( { name, testCase, skip } );
+    return this;
+  }
+
+  xit ( name, testCase ) {
+    this.it( name, testCase, true );
     return this;
   }
 
@@ -33,12 +47,18 @@ export default class ExpectTestSuite {
 
     let passed = 0;
     let failed = 0;
+    let skipped = 0;
     console.log( this.ch.intro( this.titlePrint() ) );
     console.time( "time" );
 
     for ( let idx = 0; idx < this.testCases.length; idx++ ) {
-      const { name, testCase } = this.testCases[ idx ];
+      const { name, testCase, skip } = this.testCases[ idx ];
       const desc = this.describePrint( idx + 1, name );
+      if(skip){
+        console.log( desc, "|", this.ch.skip( "[SKIPPED]" ) );
+        skipped++;
+        continue;
+      }
       try {
         testCase();
         console.log( desc, "|", this.ch.pass( "[PASSED]" ) );
@@ -52,7 +72,7 @@ export default class ExpectTestSuite {
         failed++;
       }
     }
-    console.log( this.ch.completed( `Test Cases run: ${this.testCases.length}/(${passed})\npassed : ${passed} | failed : ${this.ch.error( failed )}` ) );
+    console.log( this.ch.completed( `Test Cases run: ${this.testCases.length}/(${passed})\npassed : ${passed} | failed : ${this.ch.error( failed )} | skipped : ${skipped}` ) );
     console.timeEnd( "time" );
   }
 
